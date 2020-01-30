@@ -8,23 +8,42 @@
 
 import UIKit
 
-class UserDetailViewController: UIViewController {
+import ImageKit
 
+class UserDetailViewController: UIViewController {
+    
+    let detailView = DetailView()
+
+    var randomUser: User!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        view = detailView
+        view.backgroundColor = .white
+        updateUI()
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    private func updateUI() {
+        detailView.imageView.getImage(with: randomUser.picture.large) { [weak self](result) in
+            switch result {
+            case .failure:
+                DispatchQueue.main.async {
+                    self?.detailView.imageView.image = UIImage(named: "circle")
+                }
+            case .success(let image):
+                
+                DispatchQueue.main.async {
+                    self?.detailView.imageView.image = image
+                }
+                
+            }
+        }
+        
+        detailView.nameLabel.text = "\(randomUser.name.first) \(randomUser.name.last)"
+        
+        
     }
-    */
 
 }
+
